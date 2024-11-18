@@ -72,3 +72,7 @@ docker run -d 이미지명
 # 실습용 이미지 다운로드
 docker pull devwikirepo/envnodecolorapp
 
+docker ps -a
+: 모든 컨테이너 조회
+
+docker rm -f 컨테이너 이름 

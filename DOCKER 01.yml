@@ -171,10 +171,11 @@ SECTION 05 이미지와 컨테이너
 
   2. 메타데이터 ENV 추가후 실행
     docker run --name blueColorApp --env COLOR=blue devwikirepo/envnodecolorapp
-      "Env":[
-        "COLOR=blue",
-        "PATH=/usr/local/sbin:/usr",
-        "NODE_VERSION=14.21.3",
-        "YARN_VERSION=1.22.19"
+        "Env": [
+                "COLOR=blue",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=14.21.3",
+                "YARN_VERSION=1.22.19"
+            ],
 
-      ]
+            
