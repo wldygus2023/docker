@@ -1,0 +1,180 @@
+컨테이너관리
+- 커널의 격리 기술 활용
+
+도커(Docker)
+- 2013년 오픈소스 공개
+- 컨테이너 가상화 도구
+- 컨테이너 플랫폼 
+-- 컨테이너 엔진 : Container / 컨테이너 런타임 : Container Runtime Interface 
+
+도커에 아키텍처 
+
+클라이언트 - 서버 모델
+-클라이언트(사용자 명령) -> 도커 데몬 (API) -> 결과값 전달 -> 클라이언트
+: API는 상호관에 데이터 약속방식을 이야기한다. 
+: 도커 데몬은 API를 관리하고있다.
+: 도커 데몬에 보내려면 API 양식이 있다. 
+: List containers양식에 
+
+
+Get : 주소
+json 
+
+도커 구성 
+클라이언트 역할 -> CLI 역할(API 전달) > 도커데몬 역할( json 방식) -> CLI 전달 -> 클라이언트 
+
+Docker 기본 아키텍처와 역할과정
+
+1.클라이언트(Client)
+- docker CLI 명령어를 실행하여 Dock를 제어하는 가장 기본적인 인터페이스
+- 예: docker run , docker build 등의 명령어를 실행
+
+2. CLI 역할
+- 사용자가 입력한 명령어를 Docker 데몬으로 전달 하는 인터페이스
+- CLI 내부적으로 RESTful API 호출 방식으로 사용하여 데몬과 통신
+- 요청을 JSON 형식으로 전달하여 Docker 데몬이 작업을 처리하도록 요청 
+
+3.Docker 데몬(Docker Daemon)
+- Docker 엔진의 핵심. 모든 컨테이너 생성, 이미지 관리 , 네트워크 설정 등을 수행
+- 데몬은 사용자가 CLI를 통해 요청한 명령을 실행
+- 데몬은 컨테이너를 생성하거나 삭제하고, 이미지를 빌드 및 푸시하는등 실질적인 작업을 수행 
+
+4.REST API 전달
+- CLI 명령어는 JSON 형식으로 Docker 데몬에 전달되며 , 이는 내부적으로 REST API를 사용
+- JSON 기반 통신은 플랫폼 간 호환성을 보장하며, 외부 도구가 Docker 데몬과 통신하는 방식으로 제공합니다.
+
+5. CLI로 응답 전달
+- Docker 데몬은 작업의 결과를 다시 CLI로 전달
+- CLI는 결과를 사용자가 보기 쉽게 출력
+ 
+도식화: 어떤 개념, 구조, 흐름 등을 시각적으로 표현하는것을 말한다.
+복잡한 내용을 쉽게 이해 할수 있도록 도표,그림,다이어그램 형태로 나타내는 작업
+[클라이언트 (User)] → [CLI (명령 전달)] → [Docker Daemon] ↔ [JSON 기반 REST API] ↔ [Docker Daemon 작업]
+
+예제 : 명령 실행 흐름
+
+1. 명령 실행
+docker run hello-world 
+2. CLI가 Json 요청 생성
+{
+    "command":"run",
+    "image": "hello-world"
+}
+3.Docker 데몬이 처리
+- "hello-world" 이미지를 Docker Hub에서 가져옴
+- 컨테이너를 생성하고 실행
+
+4. 응답 반환
+- 실행 결과를 JSON 형식으로 CLI에 전달
+- CLI가 사용자에게 결과 출력 : Hello from Docker 
+
+
+
+
+Nginx 웹서버 
+
+클라이언트 -> 웹서버(Nginx) 
+
+
+SECTION 03 이미지와 컨테이너 
+  이미지
+
+
+1.nginx 서버 (구성요소)
+  compig,구성요소 등등?,실행 소프트웨어 
+2.이미지 (image)
+  -특정 시점의 파일시스템(디렉토리)를 저장한 압출 파일 
+3.docker run nginx # nginx 사용할 이미지명 이미지를 컨테이너로 실행 
+
+
+가상환경에 서버를 운영하는 기술
+  도커를 사용하는 목적 = 가상화 서버를 빠르고 가볍고 운영하기 위해 사용
+  이미지 = 특정 서버를 실행할 수 있는 상태를 저장한 압축 파일 
+
+SECTION 04 이미지와 컨테이너
+  이미지와 컨테이너 실행 (차이)
+
+  
+프로그램과 프로세스 
+  크롬설치 # 데스크탑 저장공간
+  크롬실행 # CPU ,MEM(메모리) 사용 
+
+프로그램
+  실행 가능한 소프트웨어
+  디스크 공간 차지
+포로세스
+  실행 상태의 소프트웨어
+  프로그램 1:n 프로세스
+  실행 시 CPU, MEM 등의 리소스 사용 
+
+이미지(image)
+  실행 가능한 소프트웨어 + 실행에 필요한 환경
+  디스크 공간 차지
+
+컨테이너(Container)
+  실행 상태의 이미지
+  이미지 1:n 컨테이너
+  컨테이너로 실행 시 CPU,MEM 등의 리소스 사용
+  실행 시 이미지를 복사해 격리된 디스크 공간 생성
+  컨테이너 실행 시 프로세스도 
+
+SECTION 05 이미지와 컨테이너
+:메타데이터
+
+이미지 메타데이터 
+: 이미지의 데이터에 데이터
+
+이미지파일 + 이미지의 메타데이터 
+  id:sha256:76c69f..
+  RepoTags: nginx: latest
+  Env: VERSION 1.23.2,PATH=/usr/..
+  Cod: nginx -g daemon off;
+  Size: 1417782101 
+
+컨테이너의 메타데이터 
+  id: abc
+  RepoTags: nginx: latest
+  Env: VERSION=1.23.2,PATH=/usr/..
+  Cmd: nginx -g daemon off;
+  Size:141778201
+
+  ENV = 소프트웨어가 실행 시 참조할 설정 정보 
+  CMD = 컨테이너 실행 시 프로세스 실행 명령어 지정 
+
+
+  1. 기본 메타데이터로 실행
+    docker run -d --name defaultCmd nginx 
+      "Cmd": {
+        "nginx",
+        "-g",
+        "daemon off:"
+      }  
+
+  
+  2. 메타데이터 덮어쓰기 후 실행 
+    docker run --name customCmd nginx cat usr/share/nginx/html/index.html
+      "Cmd:"{
+        "cat",
+        "usr/share/nginx/html/index.html"
+      }
+  
+  envnodecoloapp
+  
+  1. 기본 메타데이터로 실행
+    docker run -d --name defaultColorApp devwikirepo/envnodecolorapp
+       "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=14.21.3",
+                "YARN_VERSION=1.22.19",
+                "COLOR=red"
+            ],
+
+  2. 메타데이터 ENV 추가후 실행
+    docker run --name blueColorApp --env COLOR=blue devwikirepo/envnodecolorapp
+      "Env":[
+        "COLOR=blue",
+        "PATH=/usr/local/sbin:/usr",
+        "NODE_VERSION=14.21.3",
+        "YARN_VERSION=1.22.19"
+
+      ]
