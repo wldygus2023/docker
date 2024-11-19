@@ -21,6 +21,9 @@ mv
 
 rm
 : 디렉터리/파일을 삭제하는 rm 
+  - r # 플래그는 디렉토리와 그 안의 모든 내용을 재귀적으로 삭제하도록 지정합니다. 
 
 clear
 : 디렉터리 화면을 지움
+
+C:\Users\WD\Desktop\NewTerminal

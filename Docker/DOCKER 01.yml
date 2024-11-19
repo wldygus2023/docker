@@ -178,4 +178,25 @@ SECTION 05 이미지와 컨테이너
                 "YARN_VERSION=1.22.19"
             ],
 
-            
+
+이미지와 컨테이너
+  컨테이너의 라이플 사이클
+
+  image -> create -> start -> restart  
+
+  Created(생성)
+  Running(실행)
+  Stopped(종료)
+  Paused(일시정지)
+  Deleted(삭제)
+
+# Created 생성
+docker create --name tencounter1 devwikirepo/tencounter
+
+# Running 실행 (up)
+docker start tecncounter1
+
+# Paused
+ docker pause hundredcounter
+
+ 

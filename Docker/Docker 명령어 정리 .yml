@@ -76,3 +76,61 @@ docker ps -a
 : 모든 컨테이너 조회
 
 docker rm -f 컨테이너 이름 
+
+docker logs(컨터이너명)
+: 컨테이너의 로그 조회
+ 
+docker create --name tencounter1 devwikirepo/tencounter
+
+docker start -i tenceounter1 # 컨테이너를 실행 및 (출력) 연결
+
+docker run --name hundredcounter1 devwikirpo/hundredcounter
+
+docker run --name hundredcounter devwikirepo/hundredcounter
+
+docker run -d -p 80:80 --name hellonginx nginx
+
+docker pull 이미지명
+: 로컬 스토리지로 이미지 다운로드
+
+docker tag 기존이미지명 추가할이미지명
+: 로컬스토리지의 이미지명 추가
+
+docker push 이미지명
+: 이미지 레지스트리에 이미지 업로드
+
+docker login
+: 이미지 레지스트리 인증 정보 생성
+
+docker logout
+: 이미지 레지스트리 인증 정보 삭제
+
+docker image rm 이미지명 
+: 로컬 스토리지의 이미지 삭제 
+
+docker image history 이미지명
+: 이미지의 레이어 이력 조회
+
+docker run -it --name 컨테이너명 이미지명 bin/bash
+: 컨테이너 실행과 동시에 터미널 접속
+
+docker commit -m 커밋명 실행중인컨테이너명 생성할이미지명
+: 실행 중인 컨테이너를 이미지로 생성 
+
+docker commit -m "edited index.html" -c'CMD["nginx","-g","daemon off;"]' officialNginx 레지스트리계정명/commitnginx
+: 실행 중인 officialNginx 컨테이너를 이미지로 커밋 
+
+      docker image ls wldygus/commitnginx # 생성된 이미지 확인 
+
+docker build -t 이미지명 Dockerfile 경로
+: 도커 파일을 통해 이미지 빌드 
+
+FROM 이미지명
+: 베이스 이미지를 지정
+
+COPY 파일경로 복사할 경로
+: 파일을 레이어에 복사
+
+CMD ["명령어"]
+: 컨테이너 실행 시 명령어 지정 
+

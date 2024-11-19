@@ -1,0 +1,42 @@
+# Express 모듈과 path 모듈을 가져옵니다.
+const express = require('express');
+const app = express(); # Express 애플리케이션 객체를 생성합니다.
+const port = 3000; # 서버가 실행될 포트를 3000번으로 설정합니다.
+const path = require('path'); # 파일 경로를 다루기 위한 Node.js 기본 모듈입니다.
+
+# 뷰 파일의 디렉토리를 설정합니다. __dirname은 현재 파일의 디렉토리를 의미합니다.
+app.set('views', path.join(__dirname, 'views'));
+
+# 뷰 엔진을 EJS로 설정합니다. EJS는 HTML 템플릿 엔진 중 하나입니다.
+app.set('view engine', 'ejs');
+
+# 루트 경로 ('/')에 대한 GET 요청을 처리합니다.
+app.get('/', (req, res) => {
+  # 환경 변수 COLOR를 가져옵니다. 설정되어 있지 않으면 기본값으로 'green'을 사용합니다.
+  const color = process.env.COLOR || 'green';
+
+  # 기본 사용자 이름을 '사용자'로 설정합니다.
+  const username = '사용자';
+
+  # views 디렉토리 내의 index.ejs 템플릿 파일을 렌더링하며, color와 username 데이터를 전달합니다.
+  res.render('index', { color, username });
+});
+
+# 동적 경로('/:name')에 대한 GET 요청을 처리합니다.
+# 이 경로는 / 뒤에 특정 이름이 추가될 때 해당 요청을 처리합니다.
+app.get('/:name', (req, res) => {
+  # 환경 변수 COLOR를 가져옵니다. 설정되어 있지 않으면 기본값으로 'green'을 사용합니다.
+  const color = process.env.COLOR || 'green';
+
+  # URL 경로에 포함된 name 값을 가져옵니다. (req.params.name)
+  const username = req.params.name;
+
+  # views 디렉토리 내의 index.ejs 템플릿 파일을 렌더링하며, color와 username 데이터를 전달합니다.
+  res.render('index', { color, username });
+});
+
+# 애플리케이션이 지정된 포트에서 수신 대기하도록 설정합니다.
+app.listen(port, () => {
+  # 서버가 실행 중임을 콘솔에 출력합니다.
+  console.log(`Simple Node.js web app is running at http://localhost:${port}`);
+});

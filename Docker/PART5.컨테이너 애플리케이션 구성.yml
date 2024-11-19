@@ -1,0 +1,50 @@
+PART5 컨테이너 애플리케이션 구성
+
+  클라우드 네이티브 애플리케이션 
+
+    클라우드 
+      : 스토리지 저장소 , 사용한 만큼만 비용을 지불한다 .
+      # 1.MSA 트래픽 증가에 빠르게 대처하기 위해선 애플리케이션이 MSA 구조로 개발되어야 합니다. 
+
+
+
+  LEafy 애플리케이션 구성
+    : 식물 관리 웹 애플리케이션
+
+
+    네트워크 정의 
+      docker network create leafy-network 
+      
+      # leafy-postgres 컨테이너 생성 
+      docker run -d --name leafy-postgres --network leafy-network devwikirepo/leafly-postgres:1.0.0
+
+      #leafy-postgres 컨테이너 로그조회
+      docker logs -f leafy-postgres 
+
+      #leafy-postgres 컨테이너 생성 
+      docker run -d -p 8080:8080 -e DB_URL=leafy-postgres --network leafy-network --name leafy devwikirepo/leafy-backend:1.0.0
+
+      #백엔드 컨테이너 로그 조회
+      docker logs -f leafy 
+    
+    프론트 정의
+      #leafy-front 컨테이너 생성 
+      docker run -d -p 80:80 --network leafy-network --name leafy-front devwikirepo/leafy-frontend:1.0.0
+
+    아이디
+      john123@gmail.com
+      password123
+
+  
+  Leafy 데이터베이스 컨테이너 
+
+    강의자료 
+      git clone https://github.com/daintree-henry/leafy.git
+
+  Leafy PostgreSQL 구조 #init.sql
+    식물정보 #plants
+    사용자-식물 연결정보 #user_plants
+    사용자정보 #users
+    사용자가 키우는 식물 다이어리 정보 # plant_logs
+
+
