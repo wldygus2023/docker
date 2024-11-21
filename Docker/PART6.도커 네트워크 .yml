@@ -1,0 +1,98 @@
+도커네트워크
+  네트워크와 IP주소 
+  공인IP와 사설IP
+  공인망과 사설망
+    서버(223.130.200.107) -> 라우터(124.11.46.91) -> 사설 IP( 192.168.0.5)
+  인터페이스와 포트
+    네트워크 인터페이스는 ip를 가지고 있을 수 있다. 
+      무선인터페이스
+      유선인터페이스 
+      포트넘버 #
+        192.168.0.5:80
+        192.168.0.5:21
+        192.168.0.5:8080
+        192.168.0.5:3000
+  NAT와 포트포워딩
+    InBound
+     (외부서버 -> 내부서버) # 서버(223.130.200.107) -> 라우터(124.11.46.91) -> 사설 IP( 192.168.0.5)
+    OuBound
+     (내부서버 -> 외부서버) # 192.168.04 -> 라우터(124.11.46.91) -> 서버(223.130.200.107) 
+
+    NAT(Netwokr Address Translation)
+    : 내부 네트워크의 사설 IP주소를 외부 네트워크의 공인 IP 주소로 변환하여 통신을 가능하게 하는 기술 
+      공인ip와 사설ip를 랜덤하게 매핑
+        NAT테이블 예시
+          공인IP주소(124.11.46.91) , 공인포트번호(10001) , 사설IP주소(192.168.0.4), 사설포트번호(80)
+          공인IP주소(124.11.46.91) , 공인포트번호(10002) , 사설IP주소(192.168.0.5), 사설포트번호(5432)
+    포트포워딩 
+    : 특정 포트로 들어오는 외부 요청을 내부 네트워크의 특정 장치나 서비스로 전달하는 설정 
+        공인ip와 사설ip를 랜덤하게 매핑
+          포트포워딩 테이블 예시
+             공인IP주소(124.11.46.91) , 공인포트번호(80) , 사설IP주소(192.168.0.4), 사설포트번호(80)
+             공인IP주소(124.11.46.91) , 공인포트번호(21) , 사설IP주소(192.168.0.5), 사설포트번호(20021)
+  DNS
+    :도메인 이름을 IP 주소로 변환하여 사용자가 웹사이트에 쉽게 접근 할 수 있도록 도와주는 인터넷 주소록 .
+    Domain(devwiki-docker.com), IpAddr(124.111.46.91)
+
+  
+
+  가상 네트워크
+  가상 네트워크와 가상 인터페이스 
+  가상 네트워크 정보 확인 및 컨테이너 간 통신 실스 
+  네트워크 지도 : 컨테이너 간통신
+  가상 네트워크 정보 확인 및 컨테이너 간 통신 실습
+    docker network ls
+    :네트워크 리스트 조회 
+    docker network inspect 네트워크명
+    :네트워크 상세 정보 조회
+
+    docker network create 네트워크명
+    :네트워크 생성
+    docker network create --driver bridge --subnet 10.0.0.0/24 --gateway 10.0.0.1 second-bridge
+    : 새로운 브릿지 네트워크 생성 
+
+    docker run -d --name ubuntuA devwikirepo/pingbuntu
+    : ubuntuA 컨테이너 생성 
+
+    docker run -it --name ubuntuB devwikirepo/pingbuntu bin/bash
+    : ubuntuB 컨테이너 생성 및 shell 접근 
+
+    docker run -it --network second-bridge --name ubuntuC devwikirepo/pingbuntu bin/bash
+    : second-bridge 네트워크에 ubuntuC 컨테이너 생성 및 shell 접근 
+
+    docker container inspect ubuntuA
+    : ubuntuA 컨테이너의 네트워크 정보 조회 
+    
+    docker exec -it ubuntuB /bin/bash
+    : 접속방법
+
+    docker rm -f ubuntuA ubuntuB ubuntuC 
+    : 실습용 컨테이너 모두 삭제
+
+    docker network rm second-bridge
+    : second-bridge 삭제
+
+    ping ubuntuA의 IP    # 172.17.0.2
+    : #docker container inspect containerA로 조회한 ip ubumtuB에서 ubuntuA로 ping 전솔 
+     docker network rm 네트워크명 
+    :네트워크 삭제
+
+  네트워크 지도:컨테이너 간 통신 
+  가상 네트워크와 포트포워딩 
+  포트포워딩 실습
+  가상 네트워크와 포트포워딩
+  네트워크 지도 : 포트포워딩
+  가상 네트워크와 DNS 
+  가상 네트워크와 실습
+  도커의 네트워크 드라이버
+  Leafy 아키텍처와 네트워크
+  네트워크 지도: leafy
+  
+
+
+  도커 네트워크
+  스토리지와 볼륨
+  도커 컴포즈 
+  dEVopS , GITHUB aCTIONS만 배우면 어느정도 이해할것으로 보임 
+
+이거 끝나면 스벨트 프로젝트하나해서 인수인계받으면 되겠다 

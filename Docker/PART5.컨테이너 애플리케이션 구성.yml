@@ -197,3 +197,73 @@ PART5 컨테이너 애플리케이션 구성
         CMD["nginx","-g","daemon off;"]
         FROM nginx:1.21.4-alpine
 
+  프론트엔드 구성
+    페이지명          URL             페이지설명
+    로그인 페이지     /login          
+    메인 페이지       /               나의 식물 리스트와 최근 다이어리 5건 조회
+    전체 식물 조회    /plants         전체 식물 리스트 조회
+    식물 추가         /plants/add     새로운 식물 추가
+    나의 일기 조회    /plantlogs       로그인한 사용자의 일기 조회
+    설정 변경         /setting         
+    사용자 정보 변경   /edituser       로그인한 사용자의 설정 변경            
+    
+  Docker 실행
+    docker run -it --name node node:14 bin/bash
+    : node.js 임시 컨테이너 실행 
+
+    mkdir /app && cd /app
+    : /app 폴더 생성 및 이동 (workdir 지시어와 동일한 효과)
+
+    docker cp . node:app
+    : leafy-frontend 경로의 모든 파일들 node 컨테이너의 app으로 복사 
+
+    npm ci 
+    : 의존 라이브러리 다운로드 
+
+    npm run build
+    : 프론트앤드 애플리케이션 빌드 
+     
+    docker cp node:app/dist .
+    : node 컨테이너에서 빌드한 결과물인 app/dist 폴더를 호스트 머신으로 복사
+
+    docker rm -f node 
+    : node 컨테이너 삭제 
+
+    docker run -d -p 80:80 --name nginx nginx 
+    :nginx 컨테이너 실행
+
+    docker cp ./dist/. nginx:usr/share/nginx/html
+    : node 컨테이너에서 빌드한 결과물인 dist 폴더를 nginx 컨테이너로 복사 
+
+    docker logs nginx
+                                            
+    docker rm -f nginx
+
+  Docker 빌드
+
+    docker build -t 레지스트리계정명/leafy-frontend:1.0.0 .
+    : leafy-frontend 이미지 빌드 
+
+    docker push 레지스트리계정명/leafy-frontend:1.0.0
+    : leadfy-frontend 이미지 푸시 
+
+    docker run -d -p 80:80 --name leafy-frontend --network leafy-network 레지스트계정명/leafy-frontend:1.0.0
+    : leafy-frontend 컨테이너 실행 
+
+    john123@qmail.com
+    password123
+
+    전체 빌드 상황
+      1./ 접속, router.js 파일 내용에 따라 HomePage.vue 페이지 응답
+      2. HomePage.vue 파일이 브라우저에 전달, 파일 내 api.get() 발견 후 백엔드 애플리케이션에 데이터 요청
+      3. 총 2개에 API요청 수행됨 , 
+      - 최근 식물 다이어리 5건 /api/v1/lplant-logs/recent/user/${userId}
+      - 사용자가 키우는 식물리스트  /api/v1/user-plants/user/${userId}
+      4. 백엔드의 비즈니스 로직 처리 시 데이터베이스 접근, 
+      식물 다이어리 5건, 사용자의 식물리스트 응답
+      5. 백엔드 애플리케이션에서 제공받는 데이터를 포함한 웹 페이지 화면 표시 
+
+    실습 컨테이너 삭제
+    
+    docker rm -f leafy-frontend leafy leafy-postgres 
+    :    실습 컨테이너 삭제
