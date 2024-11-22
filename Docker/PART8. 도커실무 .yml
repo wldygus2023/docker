@@ -1,0 +1,14 @@
+도커실무
+  1.레이어 관리
+  2. 캐싱을 활용한 빌드
+  3. Nginx 설정 커스터마이징, Tier 아키텍처 구성
+  4. 환경 변수를 활용한 동적 서버 설정
+  5. 컨테이너 애플리케이션 최적화
+  6. 컨테이너 내부에서 개발하기 (node.js/vscode)
+      Cmd+Shift+p(Mac) # Mac
+      Ctrl+shift+p (Windews) # windows
+
+      Open Folder in Container 
+      : 컨테이너 실행 
+      
+  7. JAVA 개발환경 컨테이너 활용및 디버깅(Intellij)

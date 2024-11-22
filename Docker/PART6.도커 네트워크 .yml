@@ -78,21 +78,110 @@
     :네트워크 삭제
 
   네트워크 지도:컨테이너 간 통신 
+
   가상 네트워크와 포트포워딩 
+    docker run -p HostOS의포트 :컨테이너의 포트 
+    :포트포워딩 옵션
+
+    서버(실습용PC)
+     서버 #192.168.0.10
+     서버 #192.168.0.20
+     서버 #192.168.0.30
+     
+    bridge # 가상 네트워크 
+     라우터 #172.17.01
+     nginx # 172.17.0.2
+     DB #172.17.0.3
+
+    요청 # 192.168.0.10:8001  
+    전달 # 172.17.0.2:80
+
+    요청 # 192.168.0.10:5432
+    전달 # 172.17.0.3:5432
+
+    docker run -d --name nginx nginx
+    : 포트포워딩 없이 nginx 실행 
+
+    docker container inspect nginx 
+    : nginx 컨테이너의 네트워크 정보 확인 
+
+    docker run -d -p 8001:80 --name nginx2 nginx
+    : 포트포워딩을 설정한 nginx 실행 PC의 8001 포트로 접근했을때 컨테이너의 80 포트로 포트포워딩 
+
+    docker run -d -p 8002:3000 --name redColorApp --env COLOR=red devwikirepo/envnodecolorapp 
+    : 포트포워딩을 설정한 envnodecolorapp 실행 
+
+    docker run -d -p 8003:3000 --name blueColorApp --env COLOR=blue devwikirepo/envnodecolorapp 
+    docker run -d -p 8003:3000 --name blue --env COLOR=blue devwikirepo/envnodecolorapp
+    docker run -d -p 8003:3000 --name yellow --env COLOR=yellow devwikirepo/envnodecolorapp
+
+    : 포트포워딩을 설정한 envnodecolorapp 실행 (8003포트)
+
+
+    iffonfing en0 # macOS 용
+    ipconfig # windows 용
+
+
   포트포워딩 실습
   가상 네트워크와 포트포워딩
   네트워크 지도 : 포트포워딩
   가상 네트워크와 DNS 
+    Domain #containerA
+    Domain #containerB
+    IPAddr # 10.0.0.2 
+    IPAddr # 10.0.0.3 
+  
+    docker network create --driver bridge --subnet 10.0.0.0/24 second-bridge
+    : 브리지 네트워크 생성
+
+    docker run -it --network second-bridge --name containerA devwikirepo/pingbuntu bin/bash
+    : 브리지 네트워크 실행
+
+    cat /etc/resolv.conf
+    :컨테이너에 설정된 DNS서버 정보 확인 
+
+    ping containerB
+    :containerB 도메인으로 신호 전달 시도 
+
+  
+    docker run -d --network second-bridge --name containerB devwikirepo/pingbuntu
+    : second-bridge 네트워크에 containerB 생성 
+   
+
+    docker rm -f containerB
+    :containerB  삭제 
+
+    브릿지 네트워크 
+    : "도커 브릿지"를 활용해 컨테이너간 통신, NAT 및 포트포워딩 기술을 활용해 외부 통신 지원
+    호스트 네트워크
+    : 호스트의 네트워크를 공유, 모든 컨테이너는 "호스트 머신과 동일한 IP"를 사용 , 포트 중복 불가능
+    오버레이 네트워크 
+    : kubernetes에서 사용, "호스트 머신이 다수일때 네트워크 관리" 기술
+    Macvlan 네트워크 : 컨테이너에 MAC 주소를 할당하여 물리 "네트워크 인터페이스에 직접 연결"
+
+
   가상 네트워크와 실습
   도커의 네트워크 드라이버
   Leafy 아키텍처와 네트워크
-  네트워크 지도: leafy
-  
+    docker networ create leafy-network 
+    : 애플리케이션의 네트워크 생성 
 
+    서버의 도메인으로 연결을 해야한다 
 
-  도커 네트워크
-  스토리지와 볼륨
-  도커 컴포즈 
-  dEVopS , GITHUB aCTIONS만 배우면 어느정도 이해할것으로 보임 
+    docker run -d --name leafy-postgres --network leafy-network devwikirepo/leafy-postgres:1.0.0
+    : 네트워크 지정 
+    
+    docker run -d -p 8080:8080 -e DB_URL=leafy-postgres --network leafy-network --name leafy devwikirepo/leafy-backend:1.0.0
+    : 8080포트 포트포워딩 => DB접속 URL을 postgres 컨테이너의 이름으로 지정 
 
-이거 끝나면 스벨트 프로젝트하나해서 인수인계받으면 되겠다 
+    docker run -d -p 80:80 --network leafy-network --name leafy-front devwikirepo/leafy-frontend:1.0.0
+    : 80포트 포트포워딩 
+    
+    docker ps 
+
+    2. 구성환경 삭제
+      docker rm -f leafy-front leafy leafy-postgres 
+
+      
+    
+

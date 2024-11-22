@@ -1,0 +1,84 @@
+PART7. Docker Volume , 
+ 도커볼륨이란 ?
+   : 컨테이너와 호스트 간 데이터를 지속적으로 저장하고 공유하기 위한 저장소 입니다. 
+  
+  컨테이너의 상태(State)
+    pet 방식
+    Cattle 
+
+  
+  컨테이너 상태 관리에서의 Pet 방식과 Cattle 방식은 서버나 컨테이너 관리 방식의 차이를 설명하는 개념입니다.
+
+    Pet 방식
+     설명: 각 컨테이너를 개별적으로 중요한 존재(애완동물)로 간주합니다. 
+     특정한 역할을 하며, 문제가 생기면 복구하거나 수리하는 데 중점을 둡니다.
+     특징: 컨테이너가 고유하며, 이름과 역할이 명확히 정의됨.
+           장애 시 해당 컨테이너를 직접 복구하거나 다시 설정.
+           운영 환경에서 사용자가 직접 관리.
+           Cattle 방식
+     설명: 컨테이너를 대량으로 관리하며, 개별 컨테이너가 아닌 전체 시스템의 효율과 안정성에 집중합니다. 문제가 생긴 컨테이너는 복구보다는 제거 후 새로운 컨테이너를 생성합니다.
+     특징: 컨테이너는 익명성이 높으며, 동적이고 대체 가능함. 장애 시 새 컨테이너를 신속히 배포.
+           오토스케일링, 클러스터링 환경에서 주로 사용.
+     요약:
+     Pet: "소중한 개별 컨테이너를 관리하고 유지."
+     Cattle: "필요하면 죽이고 새로 만들면 된다."
+              일반적으로 Docker와 Kubernetes 환경에서는 Cattle 방식이 더 선호됩니다. 
+
+  mkdir index && cd index 
+  mkdir index && cd index
+  #mkdir index; cd index
+  : 실습 폴더에 index 폴더를 만들고 이동 
+
+  echo Hello Volume!> index.html 
+  : index.html 파일 생성 
+  
+  도커 볼륨(Docker Volume)
+    서버에 이중화 
+      트래픽 분배 
+        로드밸런싱 
+          마운트 
+
+  도커 볼륨
+  : 컨테이너 실행 시 볼륨을 컨테이너의 내부 경로에 마운트 할 수 있습니다. USB를 꽂는 것과 유사합니다.
+      docker run -v volume1: /var/lib/postgresql/data
+      docker run -v 도커의 볼륨명:컨테이너의 내부 경로 
+
+
+    바인드 마운트 
+    : 확인해볼수 있다
+
+
+    도커 볼륨 관련 명령어
+    
+      docker volume ls
+      : 볼륨 리스트 조회
+      docker volume inspect 볼룸명
+      : 볼륨 상세 정보 조회 
+      docker volume create 볼륨명
+      : 볼륨 생성
+      docker volume rm 볼륨명
+
+    데이터 저장 및 공유: postgreSQL 
+        # 맥용 
+      docker run -d --name my-postgres -e POSTGRES_PASSWORD=password -v mydata:/var/lib/postgresql/data postgres:13
+      #윈도우용
+      docker run -d --name my-postgres -e POSTGRES_PASSWORD=password -v mydata://var/lib/postgresql/data postgres:13
+
+      docker container inspect my-postgres
+      : 컨테이너 상세 정보 출력 
+
+      docker exec -it my-postgres psql -U postgres -c"CREATE DATABASE mydb;"
+      : mydb 데이터베이스 생성 
+
+      docker rm -f my-postgres
+      : 데이터베이스 컨테이너 삭제 
+
+      docker volume ls 
+      : 도커 볼륨 확인 
+
+    Nginx index.html 공유 (바인드 마운트 )
+      - 호스트 OS의 디렉터리를 2개의 컨테이너가 마운트하여공유
+      - nginxA에서 변경한 파일이  nginxB도 변경됨
+      - 바인드마운트는 별도로 볼륨이 만들어지지 않음 
+
+      
